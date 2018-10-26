@@ -1,5 +1,6 @@
 package in.makesimple.winterlights;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -25,38 +26,30 @@ import io.feeeei.circleseekbar.CircleSeekBar;
 
 public class MainActivity extends AppCompatActivity implements BluetoothSerialListener, BluetoothDeviceListDialog.OnDeviceSelectedListener {
 
-
     private static final int REQUEST_ENABLE_BLUETOOTH = 1;
-    static String val = "";
     private BluetoothSerial bluetoothSerial;
-
-    Button SENSE, END;
-    TextView VALUE, OUT, TV1, TV2;
-    ImageView IMG1, IMG2;
-
     private MenuItem actionConnect, actionDisconnect;
-    private CircleSeekBar mSeekbar;
-    private boolean crlf = false;
-    int flag = 0;
-    int l = 0, b = 0, h = 0;
-
+    private TextView value, status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        bluetoothSerial = new BluetoothSerial(this, this);
 
-        mSeekbar = (CircleSeekBar) findViewById(R.id.seekbar);
+        bluetoothSerial = new BluetoothSerial(this, this);
+        value = (TextView) findViewById(R.id.value);
+        status = (TextView) findViewById(R.id.satus);
+        value.setText("0");
+        CircleSeekBar mSeekbar = (CircleSeekBar) findViewById(R.id.seekbar);
 
         mSeekbar.setOnSeekBarChangeListener(new CircleSeekBar.OnSeekBarChangeListener() {
             @Override
             public void onChanged(CircleSeekBar seekbar, int curValue) {
-                Toast.makeText(getApplicationContext(),curValue+"",Toast.LENGTH_SHORT).show();
-                bluetoothSerial.write("1");
+                String val = curValue + "";
+                bluetoothSerial.write(val);
+                value.setText(val);
             }
         });
-
 
 
     }
@@ -107,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements BluetoothSerialLi
             bluetoothSerial.stop();
             return true;
         } else if (id == R.id.action_crlf) {
-            crlf = !item.isChecked();
+            boolean crlf = !item.isChecked();
             item.setChecked(crlf);
             return true;
         }
@@ -153,22 +146,18 @@ public class MainActivity extends AppCompatActivity implements BluetoothSerialLi
         else
             state = BluetoothSerial.STATE_DISCONNECTED;
 
-        String subtitle;
         switch (state) {
             case BluetoothSerial.STATE_CONNECTING:
-                subtitle = getString(R.string.status_connecting);
+                status.setText(getString(R.string.status_connecting));
                 break;
             case BluetoothSerial.STATE_CONNECTED:
-                subtitle = getString(R.string.status_connected, bluetoothSerial.getConnectedDeviceName());
+                status.setText(getString(R.string.status_connected, bluetoothSerial.getConnectedDeviceName()));
                 break;
             default:
-                subtitle = getString(R.string.status_disconnected);
+                status.setText(getString(R.string.status_disconnected));
                 break;
         }
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setSubtitle(subtitle);
-        }
     }
 
     private void showDeviceListDialog() {
@@ -231,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements BluetoothSerialLi
 
     @Override
     public void onBluetoothDeviceSelected(BluetoothDevice device) {
-        // Connect to the selected remote Bluetooth device
         bluetoothSerial.connect(device);
     }
 }
