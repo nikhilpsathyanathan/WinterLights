@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">WinterLights</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_connecting">Connecting&#8230;</string>
+    <string name="status_connected">Connected to %1$s</string>
+
+    <string name="action_connect">Connect</string>
+    <string name="action_disconnect">Disconnect</string>
+    <string name="action_crlf">CRLF</string>
+    <string name="action_quit">Quit</string>
+
+    <string name="no_bluetooth">Bluetooth is not available on this device.</string>
+    <string name="paired_devices">Choose a paired Bluetooth device</string>
+
+
+</resources>
