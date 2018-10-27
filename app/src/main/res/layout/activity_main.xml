@@ -21,7 +21,7 @@
         android:id="@+id/seekbar"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        app:wheel_max_process="1000" />
+        app:wheel_max_process="1001" />
 
     <TextView
         android:id="@+id/value"
